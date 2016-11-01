@@ -84,6 +84,16 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller("TruthController", function($scope) {
+
+
+  $scope.$on('$ionicView.enter', function () {
+  $scope.conditional = [];
+  });
+
+
+})
+
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
     { title: 'Reggae', id: 1 },

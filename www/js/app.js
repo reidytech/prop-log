@@ -124,12 +124,12 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     controller: 'AppCtrl'
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.ex1', {
+    url: '/ex1',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html',
-        controller: 'CalculatorController'
+        templateUrl: 'templates/ex1.html',
+        controller: 'TruthController'
       }
     }
   })
