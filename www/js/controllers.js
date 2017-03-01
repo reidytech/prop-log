@@ -82,29 +82,164 @@ angular.module('starter.controllers', [])
       $scope.expression[$ionicSlideBoxDelegate.currentIndex()] = "";
     }
 
+    $scope.check = function(expression){
+      if(expression == "P \u22c1 Q")
+console.log("Right");
+      
+    }
+
 })
 
 .controller("TruthController", function($scope) {
 
-
   $scope.$on('$ionicView.enter', function () {
-  $scope.conditional = [];
+  	$scope.conditional = [];
   });
 
 
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller("VoteCtrl", function($scope) {
+
+	var str;
+
+	if (str=="") {
+		document.getElementById("voteCount").innerHTML="";
+		return;
+	}
+  
+	if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+	} 
+	else { // code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	xmlhttp.onreadystatechange=function() {
+		if (this.readyState==4 && this.status==200) {
+		document.getElementById("voteCount").innerHTML=this.responseText;
+		}
+	}
+	
+	xmlhttp.open("GET","userinput.php",false);
+	xmlhttp.send();
+
 })
 
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller("FormulaCtrl", function($scope, $timeout){
+
+	$scope.result = '';
+	$scope.get = {'A': '', 'B': '', 'C': ''};
+	$scope.solveStepOne = {'determinant': '', 'quotient': ''}
+	$scope.divTrue = false;
+        $scope.equation = "$$\\mathbb{\\frac{-b + \\sqrt{b^2 - 4ac}}{2a}}$$";
+        $scope.updateB = function (value) {
+            $scope.get.B = value;
+            $scope.equation = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B).concat("^2 - 4\\cdot ")
+            .concat($scope.get.A).concat("\\cdot ").concat($scope.get.C).concat("}}{2\\cdot ").concat($scope.get.A).concat("}$$");
+findDet();
+checkEmpties();
+
+            $timeout(this.updateMathJax, 0);
+          }
+
+                this.updateMathJax = function () {
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                }
+
+        $scope.updateA = function (value) {
+            $scope.get.A = value;
+            $scope.equation = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B).concat("^2 - 4\\cdot ")
+            .concat($scope.get.A).concat("\\cdot ").concat($scope.get.C).concat("}}{2\\cdot ").concat($scope.get.A).concat("}$$");
+findDet();
+checkEmpties();
+
+            $timeout(this.updateMathJax, 0);
+          }
+
+
+        $scope.updateC = function (value) {
+            $scope.get.C = value;
+            $scope.equation = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B).concat("^2 - 4\\cdot ")
+            .concat($scope.get.A).concat("\\cdot ").concat($scope.get.C).concat("}}{2\\cdot ").concat($scope.get.A).concat("}$$");
+findDet();
+checkEmpties();
+
+            $timeout(this.updateMathJax, 0);
+          }
+
+        
+         function checkEmpties(){
+
+if($scope.get.A == "")
+$scope.equation = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B).concat("^2 - 4\\cdot ")
+            .concat("a").concat("\\cdot ").concat($scope.get.C).concat("}}{2\\cdot ").concat("a").concat("}$$");
+
+if($scope.get.B == "")
+$scope.equation = "$$\\frac{-".concat("b").concat("+ \\sqrt{").concat("b").concat("^2 - 4\\cdot ")
+            .concat($scope.get.A).concat("\\cdot ").concat($scope.get.C).concat("}}{2\\cdot ").concat($scope.get.A).concat("}$$");
+
+if($scope.get.C == "")
+$scope.equation = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B).concat("^2 - 4\\cdot ")
+            .concat($scope.get.A).concat("\\cdot ").concat("c").concat("}}{2\\cdot ").concat($scope.get.A).concat("}$$");
+
+if($scope.get.C == "" && $scope.get.A == "")
+$scope.equation = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B).concat("^2 - 4\\cdot ")
+            .concat("a").concat("\\cdot ").concat("c").concat("}}{2\\cdot ").concat("a").concat("}$$");
+
+if($scope.get.B == "" && $scope.get.A == "")
+$scope.equation = "$$\\frac{-".concat("b").concat("+ \\sqrt{").concat("b").concat("^2 - 4\\cdot ")
+            .concat("a").concat("\\cdot ").concat($scope.get.C).concat("}}{2\\cdot ").concat("a").concat("}$$");
+
+if($scope.get.B == "" && $scope.get.C == "")
+$scope.equation = "$$\\frac{-".concat("b").concat("+ \\sqrt{").concat("b").concat("^2 - 4\\cdot ")
+            .concat($scope.get.A).concat("\\cdot ").concat("c").concat("}}{2\\cdot ").concat($scope.get.A).concat("}$$");
+
+if($scope.get.B == "" && $scope.get.C == "" && $scope.get.A == "")
+$scope.equation = "$$\\frac{-".concat("b").concat("+ \\sqrt{").concat("b").concat("^2 - 4\\cdot ").concat("a ").concat("\\cdot ").concat("c").concat("}}{2\\cdot ").concat("a").concat("}$$");
+
+}
+			
+      
+	$scope.submit = function() {
+		var a = $scope.get.A;
+		var b = $scope.get.B;
+		var c = $scope.get.C;
+
+		$scope.result = (-b - Math.sqrt(b*b-4*a*c))/2*a;
+	}
+
+	$scope.showNextDiv = function() {
+		$scope.divTrue = true;	
+	}
+
+	function findDet() {
+		//var aD = $scope.get.A;
+		//var bD = $scope.get.B;
+		//var cD = $scope.get.C;
+		
+		//var detB = bD*bD;
+		//var detAC = 4*aD*cD;
+		
+		//$scope.solveStepOne.determinant = "$$\\mathbb{".concat(detb).concat("}$$");  
+		//$scope.solveStepOne.quotient = (2*aD);
+		
+		$scope.solveStepOne.determinant = "$$\\frac{-".concat($scope.get.B).concat("+ \\sqrt{").concat($scope.get.B * $scope.get.B).concat(" - ")
+               .concat(4 * $scope.get.A * $scope.get.C).concat(
+	"}}{").concat(2 * $scope.get.A).concat("}$$");
+	}
+	
+	
+
+})
+
+.controller('InboxCtrl', function InboxCtrl ($scope) {
+      $scope.meta = {
+        title: "My Inbox"
+      };
+})
+
+
+.controller("WelcomeCtrl", function($scope, $stateParams) {
 });

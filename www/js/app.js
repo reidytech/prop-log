@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.staticInclude', 'starter.controllers', 'starter.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -19,8 +19,9 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-  });
+  })
 })
+
 
 .factory("$calculatorFactory", function() {
 
@@ -113,6 +114,37 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 })
 
+.factory('InboxFactory', function InboxFactory($q, $http, $location){
+	var exports = {};
+	exports.messages = [];
+	
+	exports.goToMessage = function(id) {
+		if(angular.isNumber(id)){
+		//$location.path('inbox/email/' + id)
+		}
+	}
+	
+	exports.deleteMessage = function (id, index) {
+		this.messages.splice(index, 1);
+	}	
+	
+	exports.getMessages = function(){
+		var deferred = $q.defer();
+		return $http.get('json/emails.json')
+		.success(function (data) {
+		exports.messages = data;
+		deferred.resolve(data);
+		})
+		.error(function(data) {
+		deferred.reject(data);
+		});
+		return deferred.promise;
+	};
+	
+	return exports;
+})
+
+
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
@@ -144,36 +176,65 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
-  .state('app.browse', {
-      url: '/browse',
+  .state('app.ex2', {
+      url: '/ex2',
       views: {
         'menuContent': {
-          templateUrl: 'templates/browse.html',
-          controller: 'CalculatorController'
+          templateUrl: 'templates/ex2.html',
+          controller: 'VoteCtrl'
         }
       }
     })
-    .state('app.playlists', {
-      url: '/playlists',
+  .state('app.ex4', {
+      url: '/ex4',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/ex4.html',
         }
       }
     })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
+    
+    .state('app.qformula', {
+    url: '/qformula', 
     views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+    	'menuContent': {
+    	 templateUrl: 'templates/qformula.html',
+    	 controller: 'FormulaCtrl'
+    	 }
+       }
+    })
+    .state('app.welcome', {
+      url: '/welcome',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/welcome.html',
+          controller: 'WelcomeCtrl'
+        }
       }
+    })
+    
+    .state('app.inbox', {
+    	url: '/inbox',
+    	views: {
+    	'menuContent': {
+    	templateUrl: 'templates/inbox.html',
+    	controller: 'InboxCtrl'
+    	}
+       }
+    })
+    
+    .state('app.inbox/email/:id', {
+    url: '/email',
+    views: {
+    'menuContent': {
+    templateUrl: 'templates/email.html',
+    controller: 'EmailCtrl'
     }
+   }
   });
+    
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/welcome');
 
   String.prototype.isNumeric = function() {
       return !isNaN(parseFloat(this)) && isFinite(this);

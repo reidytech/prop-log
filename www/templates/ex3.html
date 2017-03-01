@@ -28,7 +28,7 @@
                <input ng-model="expression[0]" type="text" placeholder="Logical Expression"/>
              </label>
            </div>
-          <button type="submit" class="button button-block button-balanced">
+          <button type="submit" class="button button-block button-balanced" ng-click="check(expression[0])">
             <strong>Check</strong>
           </button>
         </form>
@@ -146,7 +146,7 @@
           <input ng-model="expression[4]" type="text" placeholder="Logical Expression"/>
         </label>
       </div>
-     <button type="submit" class="button button-block button-balanced">
+     <button type="submit" class="button button-block button-balanced" ng-click="check()">
        <strong>Check</strong>
      </button>
    </form>
